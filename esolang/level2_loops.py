@@ -31,4 +31,21 @@ class Interpreter(esolang.level1_statements.Interpreter):
     15
     >>> interpreter.visit(parser.parse("a=0; while a < 10 {a = a + 1}"))
     10
-    >>> interpreter.visit(parser.parse("a=0; wh
+    >>> interpreter.visit(parser.parse("a=0; while a < 5 {a = a + 1}; a"))
+    5
+    '''
+    def range(self, tree):
+        return range(int(self.visit(tree.children[0])))
+
+    def forloop(self, tree):
+        varname = tree.children[0].value
+        xs = self.visit(tree.children[1])
+        self.stack.append({})
+        for x in xs:
+            self.stack[-1][varname] = x
+            result = self.visit(tree.children[2])
+        self.stack.pop()
+        return result
+    def whileloop(self, tree):
+        pass
+
