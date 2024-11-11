@@ -116,25 +116,3 @@ class Interpreter(esolang.level0_arithmetic.Interpreter):
                 return value
         self.stack[-1][name] = value
         return value
-
-    def assign_var(self, tree):
-        name = tree.children[0].value
-        value = self.visit(tree.children[1])
-        self._assign_to_stack(name, value)
-        return value
-
-    def access_var(self, tree):
-        name = tree.children[0].value
-        return self._get_from_stack(name)
-
-    def block(self, tree):
-        self.stack.append({})
-        res = self.visit(tree.children[0])
-        self.stack.pop()
-        return res
-    def if_statement(self, tree):
-        condition_result = self.visit(tree.children[0])
-        false_output = self.visit(tree.children[2])[0]
-        if condition_result == 0:
-            return self.visit(tree.children[1])[0]
-        return false_output 
