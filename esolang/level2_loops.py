@@ -36,6 +36,21 @@ class Interpreter(esolang.level1_statements.Interpreter):
     1
     >>> interpreter.visit(parser.parse("0 > 1"))
     0
+    >>> interpreter.visit(parser.parse("a=0; while a < 3 {a = a + 2}"))
+    2
+
+    >>> interpreter.visit(parser.parse("a=0; while a < 6 {a = a + 1}; a"))
+    6
+
+    >>> interpreter.visit(parser.parse("a=0; while a < 7 {a = a + 3}; a"))
+    6
+
+    >>> interpreter.visit(parser.parse("a=10; while a > 0 {a = a - 2}; a"))
+    0
+
+    >>> interpreter.visit(parser.parse("a=1; while a < 4 {a = a * 2}; a"))
+    4
+
     '''
     def range(self, tree):
         return range(int(self.visit(tree.children[0])))
@@ -50,7 +65,7 @@ class Interpreter(esolang.level1_statements.Interpreter):
         self.stack.pop()
         return result
     def whileloop(self, tree):
-        while self.visit(tree.children[0]) == 1:
+        while self.visit(tree.children[0]) == 0:
             a = self.visit(tree.children[1])
         return a
     def comparison(self, tree):
@@ -58,9 +73,9 @@ class Interpreter(esolang.level1_statements.Interpreter):
         op = tree.children[1].value
         v2 = self.visit(tree.children[2])
         if eval(str(v1) + op + str(v2)):
-            return 1
-        else:
             return 0
+        else:
+            return 1
         pass
 interpreter = Interpreter()
 interpreter.visit(parser.parse("a=0; while a < 5 {a = a + 1}; a"))

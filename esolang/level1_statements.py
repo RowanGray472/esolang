@@ -57,6 +57,8 @@ class Interpreter(esolang.level0_arithmetic.Interpreter):
     0
     >>> interpreter.visit(parser.parse("a = 1; if (a): { 10 } else 100"))
     100
+    >>> interpreter.visit(parser.parse("a=2; b=1; if (a-b): { 5 } else 1"
+    1
 
     '''
     def __init__(self):
