@@ -2,14 +2,13 @@ import lark
 import esolang.level1_statements
 
 grammar = esolang.level1_statements.grammar + r"""
-    %extend start: forloop | whileloop
+    %extend start: forloop | whileloop | whileloop | range | comparison
 
     forloop: "for" NAME "in" range block
-    whileloop: "while" while_condition block
+    whileloop: "while" comparison block
     range: "range" "(" start ")"
-    while_condition: start comparison_operator start
-
-    comparison_operator: ">" | "<" | ">=" | "<=" | "==" | "!="
+    comparison: start COMPARISON_OPERATOR start
+    COMPARISON_OPERATOR: ">" | "<" | ">=" | "<=" | "==" | "!="
 """
 parser = lark.Lark(grammar)
 
@@ -33,6 +32,10 @@ class Interpreter(esolang.level1_statements.Interpreter):
     10
     >>> interpreter.visit(parser.parse("a=0; while a < 5 {a = a + 1}; a"))
     5
+    >>> interpreter.visit(parser.parse("1 > 0"))
+    1
+    >>> interpreter.visit(parser.parse("0 > 1"))
+    0
     '''
     def range(self, tree):
         return range(int(self.visit(tree.children[0])))
@@ -47,5 +50,17 @@ class Interpreter(esolang.level1_statements.Interpreter):
         self.stack.pop()
         return result
     def whileloop(self, tree):
+        while self.visit(tree.children[0]) == 1:
+            a = self.visit(tree.children[1])
+        return a
+    def comparison(self, tree):
+        v1 = self.visit(tree.children[0])
+        op = tree.children[1].value
+        v2 = self.visit(tree.children[2])
+        if eval(str(v1) + op + str(v2)):
+            return 1
+        else:
+            return 0
         pass
-
+interpreter = Interpreter()
+interpreter.visit(parser.parse("a=0; while a < 5 {a = a + 1}; a"))
