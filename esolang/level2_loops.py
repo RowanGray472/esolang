@@ -33,9 +33,9 @@ class Interpreter(esolang.level1_statements.Interpreter):
     >>> interpreter.visit(parser.parse("a=0; while a < 5 {a = a + 1}; a"))
     5
     >>> interpreter.visit(parser.parse("1 > 0"))
-    1
-    >>> interpreter.visit(parser.parse("0 > 1"))
     0
+    >>> interpreter.visit(parser.parse("0 > 1"))
+    1
     >>> interpreter.visit(parser.parse("a=0; while a < 3 {a = a + 2}"))
     4
 
